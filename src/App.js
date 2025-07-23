@@ -6,6 +6,7 @@ function App() {
   const [turn, setTurn] = useState(0)
   const [board, setBoard] = useState([['', '', ''], ['', '', ''], ['', '', '']])
   const [gameEnd, setGameEnd] = useState(false)
+  const [gameTie, setGameTie] = useState(false)
 
   function updateBoard(row, column, turn) {
     if (board[row][column] !== '') {
@@ -61,18 +62,28 @@ function App() {
         setGameEnd(true)
       }
     }
-  }
+
+    const boardFull = board.flat().every(cell => cell !== '');
+
+    if (boardFull) {
+      setGameTie(true)
+    }
+    }
 
   function resetGame() {
     setBoard([['', '', ''], ['', '', ''], ['', '', '']])
     setTurn(0)
+    setGameTie(false)
     setGameEnd(false)
   }
 
   return (
     <div className="container d-flex justify-content-center mt-5">
       <div>
-        {gameEnd && <h1 className="text-center mb-3">Player {turn == 0 ? '2' : '1'} wins!</h1>}
+        <h1 className="text-center mb-5" style={{height: '2.5rem'}}>
+        {gameEnd && `Player ${turn == 0 ? '2' : '1'} wins!`}
+        {gameTie && `Game Tie!`}
+        </h1>
       <div className="bg-white p-4 rounded-3 shadow-lg border" style={{backgroundColor: '#f8f9fa'}}>
         {board.map((row, row_index) =>
           <div key={row_index} className="d-flex">
@@ -87,7 +98,7 @@ function App() {
                   borderWidth: '2px'
                 }}
                 key={col_index} 
-                disabled={gameEnd || col !== ''}
+                disabled={gameEnd || gameTie || col !== ''}
                 onClick={() => updateBoard(row_index, col_index, turn)}
               >
                 {col}
@@ -96,7 +107,7 @@ function App() {
           </div>
         )}
       </div>
-          {gameEnd && (
+          {(gameEnd || gameTie) && (
           <div className="text-center my-4">
             <button 
               className="btn btn-warning btn-lg rounded-pill shadow"
