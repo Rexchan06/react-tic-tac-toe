@@ -1,4 +1,3 @@
-import { hover } from '@testing-library/user-event/dist/hover';
 import { useState } from 'react';
 
 function Board(prop) {
@@ -14,9 +13,9 @@ function Board(prop) {
                 return <button 
                     className="btn btn-light border-dark rounded-0"
                     style={{
-                    width: '90px', 
-                    height: '90px', 
-                    fontSize: '32px', 
+                    width: '120px', 
+                    height: '120px', 
+                    fontSize: '42px', 
                     fontWeight: 'bold',
                     borderWidth: '2px'
                     }}
