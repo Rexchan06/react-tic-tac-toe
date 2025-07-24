@@ -2,6 +2,7 @@ import { useState } from 'react';
 import GameStatus from './components/gameStatus';
 import Board from './components/board';
 import ResetButton from './components/resetButton';
+import { checkWin } from './utils/gameLogic';
 
 function App() {
   const [turn, setTurn] = useState(0)
@@ -22,58 +23,18 @@ function App() {
     }
 
     setBoard(newBoard)
-    checkWin(turn, newBoard)
-    setTurn(1 - turn)
-  }
-
-  function checkWin(turn, board) {
-    if (turn == 0) {
-      for (let i = 0; i < 3; i++) {
-        if (board[i][0] == 'O' && board[i][1] == 'O' && board[i][2] == 'O') {
-          setGameEnd(true)
-          return
-        }
-        if (board[0][i] == 'O' && board[1][i] == 'O' && board[2][i] == 'O') {
-          setGameEnd(true)
-          return
-        }
-      }
-      if (board[0][0] == 'O' && board[1][1] == 'O' && board[2][2] == 'O') {
-        setGameEnd(true)
-        return
-      }
-      if (board[2][0] == 'O' && board[1][1] == 'O' && board[0][2] == 'O') {
-        setGameEnd(true)
-        return
-      }
-    }
-    if (turn == 1) {
-      for (let i = 0; i < 3; i++) {
-        if (board[i][0] == 'X' && board[i][1] == 'X' && board[i][2] == 'X') {
-          setGameEnd(true)
-          return
-        }
-        if (board[0][i] == 'X' && board[1][i] == 'X' && board[2][i] == 'X') {
-          setGameEnd(true)
-          return
-        }
-      }
-      if (board[0][0] == 'X' && board[1][1] == 'X' && board[2][2] == 'X') {
-        setGameEnd(true)
-        return
-      }
-      if (board[2][0] == 'X' && board[1][1] == 'X' && board[0][2] == 'X') {
-        setGameEnd(true)
-        return
-      }
-    }
-
-    const boardFull = board.flat().every(cell => cell !== '');
-
-    if (boardFull) {
+    var gameResult = checkWin(turn, newBoard)
+    if (gameResult.gameOver == true) {
+      setGameEnd(true)
+      return
+    } else if (gameResult.tie == true) {
       setGameTie(true)
     }
+
+    if (!gameResult.gameOver && !gameResult.tie) {
+      setTurn(1 - turn)
     }
+  }
 
   function resetGame() {
     setBoard([['', '', ''], ['', '', ''], ['', '', '']])
